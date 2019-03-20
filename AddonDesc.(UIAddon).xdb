@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UIAddon>
+	<AutoStart>true</AutoStart>
+	<Forms>
+		<Item>
+			<Id>Main</Id>
+			<Form href="Widgets/Form.xdb#xpointer(/WidgetForm)"/>
+		</Item>
+		<Item>
+			<Id>TargetPanel</Id>
+			<Form href="Widgets/Bars/FormTargeter.xdb#xpointer(/WidgetForm)"/>
+		</Item>
+		<Item>
+			<Id>Buff</Id>
+			<Form href="Widgets/Buffs/Form.xdb#xpointer(/WidgetForm)"/>
+		</Item>
+		<Item>
+			<Id>Template</Id>
+			<Form href="Widgets/Templates/Main.xdb#xpointer(/WidgetForm)"/>
+		</Item>
+		<Item>
+			<Id>Form</Id>
+			<Form href="Widgets/Templates/Form.xdb#xpointer(/WidgetForm)"/>
+		</Item>
+	</Forms>
+	<MainFormId>Main</MainFormId>
+	<Name>AstralTargeter</Name>
+	<localizedNameFileRef href="name.txt"/>
+	<localizedDescFileRef href="desc.txt"/>
+	<ScriptFileRefs>
+		<Item href="/Mods/SampleCommon/SampleAddonBase.lua"/>
+		<Item href="Scripts/LibDnD.lua"/>
+		<Item href="Locales/main.lua"/>
+		<Item href="Scripts/Utils.lua"/>
+		<Item href="Scripts/Settings.lua"/>
+		<Item href="Scripts/PlayerInfo/PlayerBase.lua"/>
+		<Item href="Scripts/PlayerInfo/PlayerDistance.lua"/>
+		<Item href="Scripts/PlayerInfo/PlayerHP.lua"/>
+		<Item href="Scripts/PlayerInfo/PlayerBuffs.lua"/>
+		<Item href="Scripts/BuffCondition.lua"/>
+		<Item href="Scripts/SpellCondition.lua"/>
+		<Item href="Scripts/PlayerInfoCache.lua"/>
+		<Item href="Scripts/Forms/MainSettings.lua"/>
+		<Item href="Scripts/Forms/GUIPanels.lua"/>
+		<Item href="Scripts/GUIController.lua"/>
+		<Item href="Scripts/mainscript.lua"/>
+	</ScriptFileRefs>
+
+  <texts href=""/>
+  <textures href="Widgets/Textures/Textures.xdb#xpointer(/UIRelatedTextures)"/>
+  <visObjects href=""/>
+	<addon_name>AstralTargeter</addon_name>
+</UIAddon>
