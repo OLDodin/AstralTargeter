@@ -279,7 +279,7 @@ local function SetNecessaryTargets(anObjID, anInCombat)
 			newValue.classPriority = g_classPriority["UNIT"]
 		end
 	end
-
+	
 	if profile.targeterFormSettings.sortByHP then
 		local healthInfo = object.GetHealthInfo(anObjID)
 		newValue.hp = healthInfo and healthInfo.valuePercents
@@ -698,7 +698,10 @@ local function UnitSpawned(aParams)
 --		LogInfo("objID = ", objID, ' aParams.objectId = ', aParams.objectId or " " , " aParams.id = ", aParams.id or " ", " aParams.unitId = ", aParams.unitId)
 		if isExist(objID) and  objID then
 			local isCombat = false
-			isCombat = object.IsInCombat(objID)
+			local profile = GetCurrentProfile()
+			if profile.targeterFormSettings.twoColumnMode then
+				isCombat = object.IsInCombat(objID)
+			end
 			EraseTarget(objID)
 			SetNecessaryTargets(objID, isCombat)
 		end

@@ -13,10 +13,10 @@ function LoadSettings()
 	targeterFormSettings.highlightSelectedButton = true
 	targeterFormSettings.separateBuffDebuff = false
 	targeterFormSettings.twoColumnMode = false
-	targeterFormSettings.raidWidthText = "200"
+	targeterFormSettings.raidWidthText = "220"
 	targeterFormSettings.raidHeightText = "31"
 	targeterFormSettings.buffSize = "15"
-	targeterFormSettings.targetLimit = "18"
+	targeterFormSettings.targetLimit = "21"
 	targeterFormSettings.sortByName = true
 	targeterFormSettings.sortByHP = true
 	targeterFormSettings.sortByClass = true

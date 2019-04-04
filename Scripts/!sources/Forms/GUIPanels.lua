@@ -307,7 +307,7 @@ function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
 	
 	local distWdgWidth = 25
 	local zDistWdgWidth = 16
-	local arrowWdgWidth = 20
+	local arrowWdgWidth = 18
 	local nameStartPos = arrowWdgWidth+distWdgWidth+zDistWdgWidth+3
 	align(playerBar.textWdg, WIDGET_ALIGN_LOW)
 	move(playerBar.textWdg, arrowWdgWidth+distWdgWidth+zDistWdgWidth+3, -5)
@@ -332,7 +332,7 @@ function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
 	hide(playerBar.arrowIconWdg)
 	align(playerBar.arrowIconWdg, WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW)
 	move(playerBar.arrowIconWdg, 2, 6)
-	resize(playerBar.arrowIconWdg, 18, 18)
+	resize(playerBar.arrowIconWdg, 16, 16)
 	
 	resize(playerBar.distTextWdg, distWdgWidth)
 	align(playerBar.distTextWdg, WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW)
