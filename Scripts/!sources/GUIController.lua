@@ -689,38 +689,44 @@ local function UnitHPChanged(aParams)
 	end
 end
 
-local function UnitSpawned(aParams)
+local function UnitSpawned(anObjID)
 	if m_targetSubSystemLoaded then
 		if m_currTargetType == TARGETS_DISABLE then
 			return
 		end
-		local objID = aParams.objectId or aParams.id or aParams.unitId
---		LogInfo("objID = ", objID, ' aParams.objectId = ', aParams.objectId or " " , " aParams.id = ", aParams.id or " ", " aParams.unitId = ", aParams.unitId)
-		if isExist(objID) and  objID then
+		if isExist(anObjID) and  anObjID then
 			local isCombat = false
 			local profile = GetCurrentProfile()
 			if profile.targeterFormSettings.twoColumnMode then
-				isCombat = object.IsInCombat(objID)
+				isCombat = object.IsInCombat(anObjID)
 			end
-			EraseTarget(objID)
-			SetNecessaryTargets(objID, isCombat)
+			EraseTarget(anObjID)
+			SetNecessaryTargets(anObjID, isCombat)
 		end
 
 		SetTargetType(m_currTargetType)
 	end
 end
 
-local function UnitDespawned(aParams)
+local function UnitDespawned(anObjID)
 	if m_targetSubSystemLoaded then
 		if m_currTargetType == TARGETS_DISABLE then
 			return
 		end
-		local objID = aParams.objectId or aParams.id or aParams.unitId	
-		if objID then
-			EraseTarget(objID)
+		if anObjID then
+			EraseTarget(anObjID)
 		end
 			
 		SetTargetType(m_currTargetType)
+	end
+end
+
+local function UnitChanged(aParams)
+	for i = 0, GetTableSize(aParams.spawned)-1 do
+		UnitSpawned(aParams.spawned[i])
+	end
+	for i = 0, GetTableSize(aParams.despawned)-1 do
+		UnitDespawned(aParams.despawned[i])
 	end
 end
 
@@ -798,12 +804,10 @@ function GUIControllerInit()
 	common.RegisterEventHandler(TargetChanged, "EVENT_TRANSPORT_OBSERVING_STARTED")
 	common.RegisterEventHandler(TargetChanged, "EVENT_TRANSPORT_OBSERVING_FINISHED")
 	
-	common.RegisterEventHandler(UnitSpawned, "EVENT_ASTRAL_OBJECT_SPAWNED")
-	common.RegisterEventHandler(UnitDespawned, "EVENT_ASTRAL_OBJECT_DESPAWNED")
-	common.RegisterEventHandler(UnitSpawned, "EVENT_TRANSPORT_SPAWNED")
-	common.RegisterEventHandler(UnitDespawned, "EVENT_TRANSPORT_DESPAWNED")
-	common.RegisterEventHandler(UnitSpawned, "EVENT_ASTRAL_UNIT_SPAWNED")
-	common.RegisterEventHandler(UnitDespawned, "EVENT_ASTRAL_UNIT_DESPAWNED")
+	common.RegisterEventHandler(UnitChanged, "EVENT_ASTRAL_OBJECTS_CHANGED")
+	common.RegisterEventHandler(UnitChanged, "EVENT_TRANSPORTS_CHANGED")
+	common.RegisterEventHandler(UnitChanged, "EVENT_ASTRAL_UNITS_CHANGED")
+
 	common.RegisterEventHandler(AvatarShipChanged, "EVENT_AVATAR_TRANSPORT_CHANGED")
 	
 	common.RegisterEventHandler(BuffsChanged, "EVENT_OBJECT_BUFFS_ELEMENT_CHANGED")
