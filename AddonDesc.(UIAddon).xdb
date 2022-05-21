@@ -45,8 +45,16 @@
 		<Item href="Scripts/GUIController.lua"/>
 		<Item href="Scripts/mainscript.lua"/>
 	</ScriptFileRefs>
-
-  <texts href=""/>
+	<textsGroups>
+		<Item>
+			<groupName>rus</groupName>
+			<texts href="Locales/rus/Locale.(UIRelatedTexts).xdb#xpointer(/UIRelatedTexts)"/>
+		</Item>
+		<Item>
+			<groupName>eng</groupName>
+			<texts href="Locales/eng/Locale.(UIRelatedTexts).xdb#xpointer(/UIRelatedTexts)"/>
+		</Item>
+	</textsGroups>
   <textures href="Widgets/Textures/Textures.xdb#xpointer(/UIRelatedTextures)"/>
   <visObjects href=""/>
 	<addon_name>AstralTargeter</addon_name>

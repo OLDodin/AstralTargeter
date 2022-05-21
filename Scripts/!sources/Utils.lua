@@ -83,8 +83,45 @@ function findWord(text)
 	return pairs({toString(text)})
 end
 
+function ConcatWStringFromTable(aTable)
+	local vt = common.CreateValuedText()
+	
+	local valuedTxtFormatStr = "<rs class=\"class\">"
+	local i = 0
+    for k, v in pairs( aTable ) do
+        if v and common.IsWString(v) then
+			valuedTxtFormatStr = valuedTxtFormatStr.."<r name=\"obj"..i.."\"/>" 
+			i = i + 1
+        end
+    end
+	valuedTxtFormatStr = valuedTxtFormatStr.."</rs>"
+	
+	local tableFormat = {
+		format = userMods.ToWString(valuedTxtFormatStr),	
+	}
+	common.SetTextValues( vt, tableFormat )
+	
+	i = 0
+	for k, v in pairs( aTable ) do
+        if v and common.IsWString(v) then
+			vt:SetVal("obj"..i, v)
+			i = i + 1
+        end
+    end
+	
+	return common.ExtractWStringFromValuedText( vt )
+end 
+
+function ConcatWString(...)
+	local arg = { ... }
+	return ConcatWStringFromTable(arg)
+end 
+
 function formatText(text, align, fontSize, shadow, outline, fontName)
-	return "<body fontname='"..(toStringUtils(fontName) or "AllodsWest").."' alignx = '"..(toStringUtils(align) or "left").."' fontsize='"..(toStringUtils(fontSize) or "14").."' shadow='"..(toStringUtils(shadow) or "0").."' outline='"..(toStringUtils(outline) or "1").."'><rs class='color'>"..(toStringUtils(text) or "").."</rs></body>"
+	local firstPart = "<body fontname='"..(toStringUtils(fontName) or "AllodsWest").."' alignx = '"..(toStringUtils(align) or "left").."' fontsize='"..(toStringUtils(fontSize) or "14").."' shadow='"..(toStringUtils(shadow) or "0").."' outline='"..(toStringUtils(outline) or "1").."'><rs class='color'>"
+	local textMessage = toWString(text) or common.GetEmptyWString()
+	local secondPart = "</rs></body>"
+	return ConcatWString(toWString(firstPart), textMessage, toWString(secondPart))
 end
 
 function toValuedText(text, color, align, fontSize, shadow, outline, fontName)

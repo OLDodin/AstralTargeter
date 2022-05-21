@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UIRelatedTexts>
+  <items>
+    <Item>
+      <name>ALL_TARGETS</name>
+      <resource href="ALL_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>ENEMY_TARGETS</name>
+      <resource href="ENEMY_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>FRIEND_TARGETS</name>
+      <resource href="FRIEND_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>ENEMY_MOBS_TARGETS</name>
+      <resource href="ENEMY_MOBS_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>FRIEND_MOBS_TARGETS</name>
+      <resource href="FRIEND_MOBS_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>ENEMY_SHIPS_TARGETS</name>
+      <resource href="ENEMY_SHIPS_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>FRIEND_SHIPS_TARGETS</name>
+      <resource href="FRIEND_SHIPS_TARGETS.txt"/>
+    </Item>
+    <Item>
+      <name>TARGETS_DISABLE</name>
+      <resource href="TARGETS_DISABLE.txt"/>
+    </Item>
+  </items>
+</UIRelatedTexts>
