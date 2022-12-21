@@ -1,5 +1,5 @@
 local m_reactions={}
-local m_template = createWidget(nil, "Template", "Template")
+local m_template = getChild(mainForm, "Template")
 
 function AddReaction(name, func)
 	if not m_reactions then m_reactions={} end
@@ -390,7 +390,7 @@ local function LoadTargeterData()
 	local profile = GetCurrentProfile()
 	local isCombat = false
 	local unitList = GetAstroList()
-	
+
 	for _, objID in pairs(unitList) do
 		if profile.targeterFormSettings.twoColumnMode then
 			isCombat = object.IsInCombat(objID)
@@ -525,6 +525,7 @@ local function SortAndSetTarget(aTargetUnion, aPanelListShift, aPanelPosShift)
 			end
 		end
 	end
+	
 	--находим панели уже отображаемых игроков
 	local reusedPanels, freePanels = SeparateTargeterPanelList(listOfObjForType, aPanelListShift)
 	local freePanelInd = 1
@@ -634,7 +635,7 @@ function SetTargetType(aType, anIsTypeChanged)
 	if profile.targeterFormSettings.twoColumnMode then
 		targetUnionCombat = MakeTargetUnion(aType, true)
 	end
-	
+
 	local cntSimple = 0
 	local cntCombat = 0
 	if profile.targeterFormSettings.twoColumnMode then
@@ -798,8 +799,7 @@ function GUIControllerInit()
 	AvatarShipChanged()
 	
 	
-	startTimer("updateTimer", "EVENT_UPDATE_TIMER", 0.1)
-	common.RegisterEventHandler(Update, "EVENT_UPDATE_TIMER")
+	startTimer("updateTimer", Update, 0.1)
 	
 	common.RegisterEventHandler(TargetChanged, "EVENT_TRANSPORT_OBSERVING_STARTED")
 	common.RegisterEventHandler(TargetChanged, "EVENT_TRANSPORT_OBSERVING_FINISHED")

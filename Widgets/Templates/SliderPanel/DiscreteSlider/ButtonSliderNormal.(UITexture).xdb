@@ -3,21 +3,19 @@
 	<mipSW>-1</mipSW>
 	<mipsNumber>1</mipsNumber>
 	<generateMipChain>false</generateMipChain>
-	<type>DXT5</type>
-	<width>256</width>
-	<height>256</height>
-	<realWidth>236</realWidth>
-	<realHeight>155</realHeight>
+	<type>DXT1</type>
+	<width>32</width>
+	<height>64</height>
+	<realWidth>32</realWidth>
+	<realHeight>64</realHeight>
 	<disableLODControl>false</disableLODControl>
 	<alphaTex>true</alphaTex>
-	<binaryFileSize>1528</binaryFileSize>
-	<binaryFile href="button.(UITexture).bin" />
+	<binaryFileSize>63</binaryFileSize>
+	<binaryFile href="ButtonSliderNormal.(UITexture).bin" />
 	<binaryFileSize2>0</binaryFileSize2>
 	<binaryFile2 href="" />
-	<sourceFile href="button.tga" />
-	<sourceFileCRC>167333244</sourceFileCRC>
+	<sourceFile href="ButtonSliderNormal.tga" />
+	<sourceFileCRC>186450101</sourceFileCRC>
 	<wrap>false</wrap>
 	<LocalizationInfo />
-	<atlasPart>true</atlasPart>
-	<pool>UNDEFINED</pool>
 </UITexture>

@@ -7,7 +7,7 @@ Global("g_classPriority", {
 	["UNIT"]		= 1
 })
 
-local m_template = createWidget(nil, "Template", "Template")
+local m_template = getChild(mainForm, "Template")
 
 
 local m_relationColors={
@@ -443,7 +443,7 @@ end
 
 function CreateTargeterPanel()
 	setTemplateWidget(m_template)
-	local targeterPanel = common.AddonCreateChildForm("TargetPanel")
+	local targeterPanel = getChild(mainForm, "AstralTargeter")
 	move(targeterPanel, 500, 380)
 	local wtTopPanel = getChild(targeterPanel, "TopTargeterPanel")
 	DnD:Init(targeterPanel, wtTopPanel, true, false)

@@ -4,18 +4,18 @@
 	<mipsNumber>1</mipsNumber>
 	<generateMipChain>false</generateMipChain>
 	<type>DXT5</type>
-	<width>256</width>
-	<height>256</height>
-	<realWidth>244</realWidth>
-	<realHeight>193</realHeight>
+	<width>64</width>
+	<height>64</height>
+	<realWidth>64</realWidth>
+	<realHeight>64</realHeight>
 	<disableLODControl>false</disableLODControl>
 	<alphaTex>true</alphaTex>
-	<binaryFileSize>636</binaryFileSize>
-	<binaryFile href="blue.(UITexture).bin" />
+	<binaryFileSize>1771</binaryFileSize>
+	<binaryFile href="highlight.(UITexture).bin" />
 	<binaryFileSize2>0</binaryFileSize2>
 	<binaryFile2 href="" />
-	<sourceFile href="blue.tga" />
-	<sourceFileCRC>-538441128</sourceFileCRC>
+	<sourceFile href="highlight.tga" />
+	<sourceFileCRC>-1427670421</sourceFileCRC>
 	<wrap>false</wrap>
 	<LocalizationInfo />
 	<atlasPart>true</atlasPart>

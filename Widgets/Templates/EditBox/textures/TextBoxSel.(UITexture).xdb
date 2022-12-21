@@ -4,18 +4,18 @@
 	<mipsNumber>1</mipsNumber>
 	<generateMipChain>false</generateMipChain>
 	<type>DXT5</type>
-	<width>256</width>
-	<height>256</height>
-	<realWidth>236</realWidth>
-	<realHeight>155</realHeight>
+	<width>32</width>
+	<height>32</height>
+	<realWidth>32</realWidth>
+	<realHeight>32</realHeight>
 	<disableLODControl>false</disableLODControl>
 	<alphaTex>true</alphaTex>
-	<binaryFileSize>1539</binaryFileSize>
-	<binaryFile href="button_light.(UITexture).bin" />
+	<binaryFileSize>130</binaryFileSize>
+	<binaryFile href="TextBoxSel.(UITexture).bin" />
 	<binaryFileSize2>0</binaryFileSize2>
 	<binaryFile2 href="" />
-	<sourceFile href="button_light.tga" />
-	<sourceFileCRC>1946675272</sourceFileCRC>
+	<sourceFile href="TextBoxSel.tga" />
+	<sourceFileCRC>153938749</sourceFileCRC>
 	<wrap>false</wrap>
 	<LocalizationInfo />
 	<atlasPart>true</atlasPart>

@@ -117,6 +117,15 @@ function ConcatWString(...)
 	return ConcatWStringFromTable(arg)
 end 
 
+function LogAllCSSStyle()
+	local listCSS = common.GetCSSList()
+	for i = 0, GetTableSize(listCSS) do
+		if listCSS[i] then 
+			LogInfo(listCSS[i])
+		end
+	end
+end
+
 function formatText(text, align, fontSize, shadow, outline, fontName)
 	local firstPart = "<body fontname='"..(toStringUtils(fontName) or "AllodsWest").."' alignx = '"..(toStringUtils(align) or "left").."' fontsize='"..(toStringUtils(fontSize) or "14").."' shadow='"..(toStringUtils(shadow) or "0").."' outline='"..(toStringUtils(outline) or "1").."'><rs class='color'>"
 	local textMessage = toWString(text) or common.GetEmptyWString()
@@ -129,6 +138,7 @@ function toValuedText(text, color, align, fontSize, shadow, outline, fontName)
 	text=toWString(text)
 	if not valuedText or not text then return nil end
 	valuedText:SetFormat(toWString(formatText(text, align, fontSize, shadow, outline, fontName)))
+	
 	if color then
 		valuedText:SetClassVal( "color", color )
 	else
@@ -342,7 +352,6 @@ function setBackgroundColor(widget, color)
 end
 
 local templateWidget=nil
-local form=nil
 
 function getDesc(name)
 	local widget=templateWidget and name and templateWidget.GetChildUnchecked and templateWidget:GetChildUnchecked(name, false)
@@ -366,11 +375,13 @@ function getForm(widget)
 end
 
 function createWidget(parent, widgetName, templateName, alignX, alignY, width, height, posX, posY, noParent)
-	local desc=getDesc(templateName)
-	if not desc and parent then return nil end
+	local widget = nil
 	local owner=getForm(parent)
-	local widget=owner and owner:CreateWidgetByDesc(desc) or common.AddonCreateChildForm(templateName)
-	if parent and widget and not noParent then parent:AddChild(widget) end --
+
+	local desc = getDesc(templateName)
+	if not desc and parent then return nil end
+	widget = owner and owner:CreateWidgetByDesc(desc)
+	if parent and widget and not noParent then parent:AddChild(widget) end
 	setName(widget, widgetName)
 	align(widget, alignX, alignY)
 	move(widget, posX, posY)
@@ -398,7 +409,8 @@ end
 function changeCheckBox(widget)
 	if not widget or not widget.GetVariantCount then return end
 	if not widget.GetVariant or not widget.SetVariant then return end
-
+	if widget:GetVariantCount()<2 then return end
+	
 	if 0==widget:GetVariant() then 	widget:SetVariant(1)
 	else 							widget:SetVariant(0) end
 end
@@ -428,8 +440,12 @@ end
 -- Timers functions
 --------------------------------------------------------------------------------
 
-local template=createWidget(nil, "Template", "Template")
+
+
+local template=getChild(mainForm, "Template")
+
 local timers={}
+local m_loopEffects={}
 
 function timer(params)
 	if not params.effectType == ET_FADE then return end
@@ -446,17 +462,18 @@ function timer(params)
 		if timers[name].widget and not timers[name].one then
 			timers[name].widget:PlayFadeEffect( 1.0, 1.0, timers[name].speed*1000, EA_MONOTONOUS_INCREASE )
 		end
-		userMods.SendEvent( timers[name].event, {sender = common.GetAddonName()} )
+		--userMods.SendEvent( timers[name].event, {sender = common.GetAddonName()} )
+		timers[name].callback()
 	end
 end
 
-function startTimer(name, eventname, speed, one)
+function startTimer(name, callback, speed, one)
 	if name and timers[name] then destroy(timers[name].widget) end
 	setTemplateWidget(template)
 	local timerWidget=createWidget(mainForm, name, "Timer")
-	if not timerWidget or not name or not eventname then return nil end
+	if not timerWidget or not name or not callback then return nil end
 	timers[name]={}
-	timers[name].event=eventname
+	timers[name].callback=callback
 	timers[name].widget=timerWidget
 	timers[name].one=one
 	timers[name].speed=tonumber(speed) or 1
@@ -481,22 +498,79 @@ function destroyTimer(name)
 	timers[name]=nil
 end
 
+function effectDone(aParams)
+	if aParams.effectType ~= ET_FADE then 
+		return 
+	end
+
+	local findedWdg = nil
+	for _, v in pairs(m_loopEffects) do
+		if v and equals(aParams.wtOwner, v.widget) then
+			findedWdg = v
+			break
+		end
+	end
+	if not findedWdg then return end
+
+	if findedWdg.widget then
+		findedWdg.widget:PlayFadeEffect( 0.0, 1.0, findedWdg.speed*1000, EA_SYMMETRIC_FLASH )
+	end
+end
+
+function startLoopBlink(aWdg, aSpeed)
+	for i, v in pairs(m_loopEffects) do
+		if v and equals(aWdg, v.widget) then
+			v.speed = aSpeed
+			return
+		end
+	end
+	
+	local obj = {}
+	obj.widget = aWdg
+	obj.speed = aSpeed
+	table.insert(m_loopEffects, obj)
+	
+	aWdg:PlayFadeEffect( 0.0, 1.0, aSpeed*1000, EA_SYMMETRIC_FLASH )
+end
+
+function stopLoopBlink(aWdg)
+	for i, v in pairs(m_loopEffects) do
+		if v and equals(aWdg, v.widget) then
+			table.remove(m_loopEffects, i)
+			break
+		end
+	end
+	
+	aWdg:FinishFadeEffect()
+end
+
+
 --------------------------------------------------------------------------------
 -- Locales functions
 --------------------------------------------------------------------------------
 
-local locale=getLocale()
+local locale=nil
 
-function setLocaleText(widget, checked)
+function setLocaleTextEx(widget, checked, color, align, fontSize, shadow, outline, fontName)
+	if not locale then
+		locale=getLocale()
+	end
 	local name=getName(widget)
 	local text=name and locale[name]
+	if not text then
+		text = name
+	end
 	if text then
 		if checked~=nil then
-			text=formatText(text, "left")
+			text=formatText(text, align)
 			setCheckBox(widget, checked)
 		end
-		setText(widget, text)
+		setText(widget, text, color, align, fontSize, shadow, outline, fontName)
 	end
+end
+
+function setLocaleText(widget, checked)
+	setLocaleTextEx(widget, checked, "ColorWhite",  "left")
 end
 
 --------------------------------------------------------------------------------
@@ -508,84 +582,80 @@ Global("TYPE_ITEM", 1)
 Global("TYPE_NOT_DEFINED", 2)
 Global("NOT_FOUND", 100)
 
-local cacheSpellId={}
+local cacheSpellId=nil
 
-function getSpellIdFromName(name) 
-	if not name then return nil end
-
-	name = toString(name)
-	local cachedSpellID = cacheSpellId[name]
-	if cachedSpellID then
-		if type(cachedSpellID)=="userdata" then
-			if spellLib.CanRunAvatarEx(cachedSpellID) then return cachedSpellID end
-		else
-			return nil
-		end
-	end	
+function getSpellIdFromName(aName) 
+	if not aName then return nil end
 	
-	local spellbook = avatar.GetSpellBook()
-	if not spellbook then return nil end
+	if not cacheSpellId then
+		cacheSpellId = GetAVLWStrTree()
+		local spellbook = avatar.GetSpellBook()
+		if not spellbook then return nil end
 
-	for _, spellId in pairs(spellbook) do
-		local spellInfo = spellId and spellLib.GetDescription(spellId)
-		local spellNameFromLib = toString(spellInfo.name)
-		if spellInfo and spellNameFromLib == name then
-			cacheSpellId[name] = spellId
-			return spellId
-		end
-	end
-
-	cacheSpellId[name] = NOT_FOUND
-	
-	return nil
-end
-
-local cacheItemId={}
-
-function getItemIdFromName(name)
-	if not name then return nil end
-	name = toString(name)
-	
-	local cachedItemID = cacheItemId[name]
-	if cachedItemID then
-		if type(cachedItemID)=="userdata" then
-			if itemLib.IsItem(cachedItemID) then return cachedItemID end
-		else
-			return nil
-		end
-	end	
-
-	local inventory = avatar.GetInventoryItemIds()
-	if not inventory then return nil end
-	
-	for i, itemId in pairs(inventory) do
-		local itemInfo = itemId and itemLib.GetItemInfo(itemId)
-		if itemInfo then
-			local itemNameFromLib = toString(itemInfo.name)
-			if itemNameFromLib == name then
-				cacheItemId[name] = itemId
-				return itemId
+		for _, spellId in pairs(spellbook) do
+			local spellInfo = spellId and spellLib.GetDescription(spellId)
+			if spellInfo then
+				cacheSpellId:add({name = spellInfo.name, id = spellId})
 			end
 		end
 	end
 	
-	cacheItemId[name] = NOT_FOUND
+	local objToFind = {name = aName}
+	local searchRes = cacheSpellId:find(objToFind)
+	if searchRes ~= nil then
+		if type(searchRes.id)=="userdata" then
+			if spellLib.CanRunAvatarEx(searchRes.id) then return searchRes.id end
+		else
+			return nil
+		end
+	end
+	
+	return nil
+end
+
+local cacheItemId=nil
+
+function getItemIdFromName(aName)
+	if not aName then return nil end
+	
+	if not cacheItemId then
+		cacheItemId = GetAVLWStrTree()
+		local inventory = avatar.GetInventoryItemIds()
+		if not inventory then return nil end
+
+		for i, itemId in pairs(inventory) do
+			local itemInfo = itemId and itemLib.GetItemInfo(itemId)
+			if itemInfo then
+				cacheItemId:add({name = itemInfo.name, id = itemId})
+			end
+		end
+	end
+	
+	local objToFind = {name = aName}
+	local searchRes = cacheItemId:find(objToFind)
+	if searchRes ~= nil then
+		if type(searchRes.id)=="number" then
+			if itemLib.IsItem(searchRes.id) then return searchRes.id end
+		else
+			return nil
+		end
+	end
 
 	return nil
 end
 
 function clearSpellCache()
-	cacheSpellId={}
+	cacheSpellId=nil
 end
 
 function clearItemsCache()
-	cacheItemId={}
+	cacheItemId=nil
 end
 
 
 function isExist(targetId)
 	if targetId then
-		return object.IsExist(targetId)
+		return object.IsExist(targetId) and object.IsUnit(targetId)
 	end
 	return false
 end
@@ -619,12 +689,19 @@ function isGroup()
 	return group.IsExist()
 end
 
-function cast(name, targetId)
+function isPvpZoneNow()
 	if matchMaking.CanUseMatchMaking() and matchMaking.IsEventProgressExist() then
 		local battleInfo = matchMaking.GetCurrentBattleInfo()
 		if battleInfo and not battleInfo.isPvE  then
-			return false
+			return true
 		end
+	end
+	return false
+end
+
+function cast(name, targetId)
+	if isPvpZoneNow() then
+		return false
 	end
 	
 	local spellId=name and getSpellIdFromName(name)
@@ -639,13 +716,16 @@ function cast(name, targetId)
 	local state=spellLib.GetState(spellId)
 	if not state.prepared and duration and duration > 1 then selectTarget(targetId) end
 
-	local targetType=properties.targetType and properties.targetType==SPELL_TYPE_SELF
-	if targetId and object.IsExist(targetId) and not targetType then
-		avatar.RunTargetSpell(spellId, targetId)
+	if avatar.RunTargetSpell then
+		local targetType=properties.targetType and properties.targetType==SPELL_TYPE_SELF
+		if targetId and object.IsExist(targetId) and not targetType then
+			avatar.RunTargetSpell(spellId, targetId)
+		else
+			avatar.RunSpell(spellId)
+		end
 	else
 		avatar.RunSpell(spellId)
 	end
-
 	return true
 end
 
@@ -656,16 +736,17 @@ function useItem(name, targetId)
 			return false
 		end
 	end
-	
 	local itemId=name and getItemIdFromName(name)
 	if not itemId then return nil end
 
 	if not avatar.CheckCanUseItem( itemId, false ) then
 		return false
 	end
+
 	if targetId then
 		selectTarget(targetId)
 	end
+
 	avatar.UseItem(itemId)
 	return true
 end
@@ -678,9 +759,15 @@ function testSpell(name, targetId)
 end
 
 function ressurect(targetId, ressurectName)
-	if not locale or not locale["defaultRessurectNames"] then return false end
-	for i, v in ipairs(locale["defaultRessurectNames"]) do
-		local name=v and v.name
+	local arrNames = {}
+	for i = 1, 4 do
+		local defaultName = getLocale()["defaultRessurectNames"..i]
+		if defaultName then
+			table.insert(arrNames, defaultName)
+		end
+	end
+	for i, v in ipairs(arrNames) do
+		local name=v
 		if testSpell(name, targetId) then
 			selectTarget(targetId)
 			cast(name, targetId)
@@ -688,44 +775,6 @@ function ressurect(targetId, ressurectName)
 		end
 	end
 	return false
-end
-
-function getAstroDistanceToTarget(targetId)
-	local shipID = unit.GetTransport( avatar.GetId() )
-	if not shipID then return nil end
-	if shipID == targetId then return "my" end
-	local objPos = nil 
-	if object.IsTransport(targetId) then
-		objPos = transport.GetPosition(targetId)
-	else
-		objPos = object.GetPos(targetId)
-	end
-	if not objPos then return nil end
-	local avPos = transport.GetPosition(shipID)
-	local res = ((objPos.posX-avPos.posX)^2+(objPos.posY-avPos.posY)^2+(objPos.posZ-avPos.posZ)^2)^0.5
-	res = math.ceil(res)
-	local deltaZ = math.floor(objPos.posZ-avPos.posZ + 0.5)
-	if deltaZ > -1 and deltaZ < 1 then
-		deltaZ = 0
-	end
-	return res, deltaZ
-end
-
-function getAstroAngleToTarget(targetId)
-	local shipID = unit.GetTransport( avatar.GetId() )
-	if not shipID then return nil end
-	if shipID == targetId then return nil end
-	local objPos = nil 
-	if isExist(targetId) then
-		if object.IsTransport(targetId) then
-			objPos = transport.GetPosition(targetId)
-		else
-			objPos = object.GetPos(targetId)
-		end
-	end
-	if not objPos then return nil end
-	local myPos = transport.GetPosition(shipID)
-	return math.floor(math.atan2(objPos.posY-myPos.posY, objPos.posX-myPos.posX)*100+0.5)/100 - transport.GetDirection(shipID)
 end
 
 function getDistanceToTarget(targetId)
@@ -873,3 +922,77 @@ function copyTable(t)
   return result
 end
 
+local m_spellTextureCache = {}
+function getSpellTextureFromCache(aSpellID)
+	for _, spellTexInfo in pairs(m_spellTextureCache) do
+		if spellTexInfo.spellID:IsEqual(aSpellID) then
+			return spellTexInfo.texture
+		end
+	end
+	local newSpellTexInfo = {}
+	newSpellTexInfo.spellID = aSpellID
+	newSpellTexInfo.texture = spellLib.GetIcon(aSpellID)
+	table.insert(m_spellTextureCache, newSpellTexInfo)
+	
+	return newSpellTexInfo.texture
+end
+
+
+
+------------------------------------------------------------------
+------ Loging To Chat
+------------------------------------------------------------------
+local wtChat = nil
+local chatRows = 0 --- for clear buffer after show messages
+local valuedText = common.CreateValuedText()
+local formatVT = "<html fontname='AllodsSystem' shadow='1'><rs class='color'><r name='addon'/><r name='text'/></rs></html>"
+valuedText:SetFormat(userMods.ToWString(formatVT))
+
+wtGetNumParents = function(w, parents)
+	if parents > 0 and w.GetParent then
+		local pr = w:GetParent()
+		if pr then
+			return wtGetNumParents(pr, parents-1)
+		end
+	end
+	return w
+end
+
+function GetSysChatContainer()
+	local parents = 2
+	local w = stateMainForm:GetChildUnchecked("Chat", false)
+	if not w then
+		w = stateMainForm:GetChildUnchecked("Chat", true)
+	else
+		w = w:GetChildUnchecked("Chat", true)
+	end
+	if not w then ---- 2.0.06.13 [26.05.2011] 
+		w = stateMainForm:GetChildUnchecked("ChatLog", false)
+		w = w:GetChildUnchecked("Container", true)
+		if w then parents = 3 end
+	end
+	
+	return w, wtGetNumParents(w, parents)
+end
+
+function LogToChatVT(valuedText, name, toWW)
+	name = name or common.GetAddonName()
+
+
+	if not wtChat then wtChat = GetSysChatContainer() end
+	if wtChat and wtChat.PushFrontValuedText then
+		chatRows =  chatRows + 1
+		valuedText:SetVal( "addon", userMods.ToWString(name..": ") )
+		wtChat:PushFrontValuedText( valuedText )
+	end
+end
+
+function LogToChat(message, color, toWW)
+
+	valuedText:ClearValues() 
+	valuedText:SetClassVal( "color", color or "LogColorYellow" )
+	if not common.IsWString( message ) then	message = userMods.ToWString(message) end
+	valuedText:SetVal( "text", message )
+	LogToChatVT(valuedText, common.GetAddonName(), toWW)
+
+end
