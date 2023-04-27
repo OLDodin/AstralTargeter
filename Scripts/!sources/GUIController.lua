@@ -779,7 +779,7 @@ function UnloadTargeterSubSystem()
 end
 
 function ATButtonPressed()
-	swap(m_targetPanel)
+	DnD.SwapWdg(m_targetPanel)
 end
 
 function GUIControllerInit()
@@ -789,7 +789,7 @@ function GUIControllerInit()
 	
 	common.RegisterReactionHandler(ButtonPressed, "execute")
 	
-	AddReaction("closeButton", function (aWdg) swap(getParent(aWdg)) end)
+	AddReaction("closeButton", function (aWdg) DnD.SwapWdg(getParent(aWdg)) end)
 	AddReaction("ATButton", ATButtonPressed)
 
 	InitBuffConditionMgr()

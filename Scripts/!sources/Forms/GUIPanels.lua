@@ -251,7 +251,7 @@ function SetBaseInfoPlayerPanel(aPlayerBar, aPlayerInfo, anIsLeader, aFormSettin
 		setBackgroundColor(aPlayerBar.barWdg, barColor)
 	end
 	
-	show(aPlayerBar.wdg)
+	DnD.ShowWdg(aPlayerBar.wdg)
 end
 
 function ResetPlayerPanelPosition(aPlayerBar, aX, aY, aFormSettings)
@@ -350,7 +350,7 @@ function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
 	setBackgroundColor(playerBar.clearBarWdg, barColor) 
 	hide(playerBar.clearBarWdg)
 	
-	hide(playerBar.wdg)
+	DnD.HideWdg(playerBar.wdg)
 	
 	
 	local buffSlotCnt = math.floor((panelWidth-nameStartPos) / buffSize)
@@ -438,7 +438,7 @@ function TargetLockBtn(aTopPanelForm)
 	m_modeBtn:SetVariant(activeNum)
 	
 	local wtTopPanel = getChild(aTopPanelForm, "TopTargeterPanel")
-	DnD:Enable(wtTopPanel, activeNum==0)
+	DnD.Enable(wtTopPanel, activeNum==0)
 end
 
 function CreateTargeterPanel()
@@ -446,7 +446,7 @@ function CreateTargeterPanel()
 	local targeterPanel = getChild(mainForm, "AstralTargeter")
 	move(targeterPanel, 500, 380)
 	local wtTopPanel = getChild(targeterPanel, "TopTargeterPanel")
-	DnD:Init(targeterPanel, wtTopPanel, true, false)
+	DnD.Init(targeterPanel, wtTopPanel, true, false)
 	resize(wtTopPanel, 200, nil)
 	
 	local modePanel = getChild(wtTopPanel, "ModePanel")
@@ -459,6 +459,6 @@ function CreateTargeterPanel()
 	hide(getChild(wtTopPanel, "ConfigButton"))
 	hide(m_lockBtn)
 	--TargetLockBtn(targeterPanel)
-	hide(targeterPanel)
+	DnD.HideWdg(targeterPanel)
 	return targeterPanel
 end

@@ -8,5 +8,5 @@ function CreateMainBtn()
 		
 	local button=createWidget(mainForm, "ATButton", "Button", WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW, 30, 25, 350, 120)
 	setText(button, "AT")
-	DnD:Init(button, button, true)
+	DnD.Init(button, button, true)
 end
