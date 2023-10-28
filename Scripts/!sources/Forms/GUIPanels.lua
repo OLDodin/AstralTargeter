@@ -239,7 +239,7 @@ function SetBaseInfoPlayerPanel(aPlayerBar, aPlayerInfo, anIsLeader, aFormSettin
 	PlayerHPChanged(100, aPlayerBar)
 
 
-	if common.CompareWString(aPlayerBar.optimizeInfo.name, aPlayerInfo.name)~=0 then
+	if aPlayerBar.optimizeInfo.name ~= aPlayerInfo.name then
 		aPlayerBar.optimizeInfo.name = aPlayerInfo.name
 		--aPlayerBar.textWdg:SetVal("Name", aPlayerInfo.name)
 		setText(aPlayerBar.textWdg, aPlayerInfo.name, "ColorYellow", "left", 11)

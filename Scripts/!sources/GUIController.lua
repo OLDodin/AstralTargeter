@@ -118,7 +118,7 @@ function AddElementFromForm(aTable, aForm, aTextedit, aContainer)
 	if not aTextedit then aTextedit="EditLine1" end
 	local text = getText(getChild(aForm, aTextedit))
 	local textLowerStr = toLowerString(text)
-	if not aTable or not text or common.IsEmptyWString(text) then 
+	if not aTable or not text or text:IsEmpty() then 
 		return nil 
 	end
 	table.insert(aTable, { name=text, nameLowerStr=textLowerStr } )
