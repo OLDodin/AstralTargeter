@@ -734,11 +734,11 @@ end
 local function AvatarShipChanged()
 	local myShipID = unit.GetTransport(avatar.GetId())
 	if myShipID then
-		show(m_targetPanel)
+		DnD.ShowWdg(m_targetPanel)
 		
 		UnitRelativityDirPosChanged({id = myShipID})
 	else
-		hide(m_targetPanel)
+		DnD.HideWdg(m_targetPanel)
 	end
 end
 
@@ -761,7 +761,7 @@ function InitTargeterSubSystem(aReload)
 	m_targetSubSystemLoaded = true
 	CreateTargeterPanelCache()
 	
-	show(m_targetPanel)
+	DnD.ShowWdg(m_targetPanel)
 	InitTargeterData()
 	TargetWorkSwitch()
 end
@@ -775,7 +775,7 @@ function UnloadTargeterSubSystem()
 
 	ClearTargetPanels()
 	m_targeterPlayerPanelList = {}
-	hide(m_targetPanel)
+	DnD.HideWdg(m_targetPanel)
 end
 
 function ATButtonPressed()
