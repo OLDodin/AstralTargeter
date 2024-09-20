@@ -6,11 +6,12 @@
 	<localizedNameFileRef href="name.txt"/>
 	<localizedDescFileRef href="desc.txt"/>
 	<ScriptFileRefs>
-		<Item href="/Mods/SampleCommon/SampleAddonBase.lua"/>
-		<Item href="Scripts/LibDnD.lua"/>
-		<Item href="Locales/main.lua"/>
-		<Item href="Scripts/Utils.lua"/>
+		<Item href="Scripts/common/AddonBase.lua"/>
+		<Item href="Scripts/common/LibDnD.lua"/>
+		<Item href="Scripts/common/Locales.lua"/>
+		<Item href="Scripts/common/Utils.lua"/>
 		<Item href="Scripts/UtilsAdd.lua"/>
+		<Item href="Scripts/common/ReactionHelper.lua"/>
 		<Item href="Scripts/Settings.lua"/>
 		<Item href="Scripts/PlayerInfo/PlayerBase.lua"/>
 		<Item href="Scripts/PlayerInfo/PlayerDistance.lua"/>

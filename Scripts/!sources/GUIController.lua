@@ -1,24 +1,5 @@
-local m_reactions={}
 local m_template = getChild(mainForm, "Template")
 
-function AddReaction(name, func)
-	if not m_reactions then m_reactions={} end
-	m_reactions[name]=func
-end
-
-local function RunReaction(widget)
-	local name=getName(widget)
-	if name == "GetModeBtn" then
-		name=getName(getParent(widget))
-	end
-	if not name or not m_reactions or not m_reactions[name] then return end
-	m_reactions[name](widget)
-end
-
-local function ButtonPressed(params)
-	RunReaction(params.widget)
-	changeCheckBox(params.widget)
-end
 
 local m_targetSubSystemLoaded = false
 
@@ -410,6 +391,8 @@ local function TargetWorkSwitch()
 		SwitchTargetsBtn(TARGETS_DISABLE)
 		ClearTargetPanels()
 		
+		HideTargetDropDownSelectPanel()
+		
 		profile.targeterFormSettings.lastTargetType = m_lastTargetType
 		profile.targeterFormSettings.lastTargetWasActive = false
 		SaveAll()
@@ -422,20 +405,19 @@ local function TargetWorkSwitch()
 	end
 end
 
-local function TargetTypeChanged()
+local function SelectTargetTypePressed(aWdg, anIndex)
+	HideTargetDropDownSelectPanel()
+	
 	if m_currTargetType == TARGETS_DISABLE then
 		return
 	end
-	
-	m_currTargetType = m_currTargetType + 1
-	if m_currTargetType > FRIEND_MOBS_TARGETS then
-		m_currTargetType = ALL_TARGETS
-	end
+		
+	m_currTargetType = anIndex-1
 	SetTargetType(m_currTargetType, true)
 	local profile = GetCurrentProfile()
 	profile.targeterFormSettings.lastTargetType = m_currTargetType
 	SaveAll()
-end	
+end
 
 local function SeparateTargeterPanelList(anObjList, aPanelListShift)
 	local finededList = {} 
@@ -788,9 +770,17 @@ function GUIControllerInit()
 	LoadSettings()
 	
 	common.RegisterReactionHandler(ButtonPressed, "execute")
+	common.RegisterReactionHandler(CheckBoxChangedOn, "CheckBoxChangedOn")
+	common.RegisterReactionHandler(CheckBoxChangedOff, "CheckBoxChangedOff")
+	common.RegisterReactionHandler(DropDownBtnPressed, "DropDownBtnPressed")
+	common.RegisterReactionHandler(DropDownBtnRightClick, "DropDownBtnRightClick")
+	common.RegisterReactionHandler(SelectDropDownBtnPressed, "SelectDropDownBtnPressed")
 	
 	AddReaction("closeButton", function (aWdg) DnD.SwapWdg(getParent(aWdg)) end)
 	AddReaction("ATButton", ATButtonPressed)
+	AddReaction("targeterDropDown", SelectTargetTypePressed)
+	
+	AddRightClickReaction("targeterDropDown", TargetWorkSwitch)
 
 	InitBuffConditionMgr()
 	
@@ -826,8 +816,6 @@ function GUIControllerInit()
 	
 	common.RegisterReactionHandler(OnLeftClick, "OnLeftClick")
 	common.RegisterReactionHandler(OnRightClick, "OnRightClick" )
-	common.RegisterReactionHandler(TargetTypeChanged, "GetModeBtnReaction")
-	common.RegisterReactionHandler(TargetWorkSwitch, "GetModeBtnRightClick")
 	common.RegisterReactionHandler(TargetLockChanged, "OnTargetLockChanged")
 
 end

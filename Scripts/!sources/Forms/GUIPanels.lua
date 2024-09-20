@@ -405,6 +405,7 @@ local m_locale = getLocale()
 local m_modeBtn = nil
 local m_lockBtn = nil
 local m_targetModeName = nil
+local m_modeSelectPanel = nil
 
 Global("ALL_TARGETS", 0)
 Global("ENEMY_TARGETS", 1)
@@ -428,8 +429,12 @@ m_targetSwitchArr[ENEMY_MOBS_TARGETS] = m_locale["ENEMY_MOBS_TARGETS"]
 m_targetSwitchArr[FRIEND_MOBS_TARGETS] = m_locale["FRIEND_MOBS_TARGETS"]
 m_targetSwitchArr[TARGETS_DISABLE] = m_locale["TARGETS_DISABLE"]
 
+function HideTargetDropDownSelectPanel()
+	HideDropDownSelectPanel(m_modeSelectPanel)
+end
+
 function SwitchTargetsBtn(aNewTargetInd)
-	m_targetModeName:SetVal("Name", m_targetSwitchArr[aNewTargetInd])
+	setText(m_targetModeName, m_targetSwitchArr[aNewTargetInd], "Neutral", "left", 11)
 end
 
 function TargetLockBtn(aTopPanelForm)
@@ -439,6 +444,7 @@ function TargetLockBtn(aTopPanelForm)
 	
 	local wtTopPanel = getChild(aTopPanelForm, "TopTargeterPanel")
 	DnD.Enable(wtTopPanel, activeNum==0)
+	HideTargetDropDownSelectPanel()
 end
 
 function CreateTargeterPanel()
@@ -449,12 +455,25 @@ function CreateTargeterPanel()
 	DnD.Init(targeterPanel, wtTopPanel, true, false)
 	resize(wtTopPanel, 200, nil)
 	
-	local modePanel = getChild(wtTopPanel, "ModePanel")
-	m_targetModeName = getChild(modePanel, "ModeNameTextView")
+	setTemplateWidget(m_template)
+	local modePanel = createWidget(targeterPanel, "targeterDropDown", "DropDownPanel", WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW, 170, 20, 20, 240)
+	m_targetModeName = getChild(getChild(modePanel, "DropDownHeaderPanel"), "ModeNameTextView")
 	m_lockBtn = getChild(wtTopPanel, "ButtonLocker")
-	move(modePanel, 50, 3)
-	resize(modePanel, 140, 20)
-	m_modeBtn = getChild(modePanel, "GetModeBtn")
+	move(modePanel, 25, 3)
+	
+	m_modeBtn = getChild(getChild(modePanel, "DropDownHeaderPanel"), "GetModeBtn")
+	
+	local textArr = {}
+	for i = ALL_TARGETS, FRIEND_MOBS_TARGETS do
+		table.insert(textArr, m_targetSwitchArr[i])
+	end
+	GenerateBtnForDropDown(modePanel, textArr)
+	
+	m_modeSelectPanel = getChild(modePanel, "DropDownSelectPanel")	
+
+	local headerPanel = getChild(modePanel, "DropDownHeaderPanel")
+	align(headerPanel, WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW)
+	resize(headerPanel, 130, 20)
 	
 	hide(getChild(wtTopPanel, "ConfigButton"))
 	hide(m_lockBtn)

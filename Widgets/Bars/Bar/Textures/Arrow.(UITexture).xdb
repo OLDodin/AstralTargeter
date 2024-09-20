@@ -10,12 +10,12 @@
 	<realHeight>32</realHeight>
 	<disableLODControl>false</disableLODControl>
 	<alphaTex>true</alphaTex>
-	<binaryFileSize>262</binaryFileSize>
+	<binaryFileSize>277</binaryFileSize>
 	<binaryFile href="Arrow.(UITexture).bin" />
 	<binaryFileSize2>0</binaryFileSize2>
 	<binaryFile2 href="" />
 	<sourceFile href="Arrow.tga" />
-	<sourceFileCRC>-134353619</sourceFileCRC>
+	<sourceFileCRC>-813578191</sourceFileCRC>
 	<wrap>false</wrap>
 	<LocalizationInfo />
 	<atlasPart>true</atlasPart>

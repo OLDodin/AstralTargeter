@@ -14,8 +14,7 @@
 	</Placement>
 	<IgnoreDblClick>true</IgnoreDblClick>
 	<Variants>
-		<Item>
-			<TextFileRef href="ButtonExecute.txt" />
+		<Item>			
 			<LayerHighlight href="checkbox_light.(WidgetLayerTiledTexture).xdb#xpointer(/WidgetLayerTiledTexture)" />
 			<StateNormal>
 				<LayerMain href="checkbox_active.(WidgetLayerTiledTexture).xdb#xpointer(/WidgetLayerTiledTexture)" />
@@ -26,17 +25,16 @@
 				<FormatFileRef href="ButtonExecute.txt" />
 			</StatePushed>
 			<ReactionOnUp>true</ReactionOnUp>
-			<Reaction>execute</Reaction>
+			<Reaction>CheckBoxChangedOn</Reaction>
 		</Item>
 		<Item>
-			<TextFileRef href="ButtonExecute.txt" />
 			<LayerHighlight href="checkbox_light.(WidgetLayerTiledTexture).xdb#xpointer(/WidgetLayerTiledTexture)" />
 			<StateNormal>
 				<LayerMain href="checkbox.(WidgetLayerTiledTexture).xdb#xpointer(/WidgetLayerTiledTexture)" />
 				<FormatFileRef href="ButtonExecute.txt" />
 			</StateNormal>
 			<ReactionOnUp>true</ReactionOnUp>
-			<Reaction>execute</Reaction>
+			<Reaction>CheckBoxChangedOff</Reaction>
 		</Item>
 	</Variants>
 </WidgetButton>

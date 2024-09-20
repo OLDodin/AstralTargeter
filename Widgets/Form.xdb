@@ -4,7 +4,6 @@
 	<Priority>5550</Priority>
 	<Children>
 		<Item href="Bars/FormTargeter.xdb#xpointer(/WidgetPanel)"/>
-		<Item href="Buffs/Form.xdb#xpointer(/WidgetPanel)"/>
 		<Item href="Templates/Main.xdb#xpointer(/WidgetPanel)"/>
 	</Children>
 	<BackLayer href="" />
