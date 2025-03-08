@@ -135,7 +135,6 @@ function LogAllCSSStyle()
 	end
 end
 
-
 function formatText(text, align, fontSize, shadow, outline, fontName)
 	local firstPart = "<body fontname='"..(toStringUtils(fontName) or "AllodsFantasy")
 					.."' alignx = '"..(align or "left")
@@ -147,7 +146,7 @@ function formatText(text, align, fontSize, shadow, outline, fontName)
 	local secondPart = "</rs></body>"
 	return firstPart..textMessage..secondPart
 end
-
+--[[
 function toValuedText(text, color, align, fontSize, shadow, outline, fontName)
 	local valuedText = cachedCreateValuedText()
 	if not valuedText or not text then return nil end
@@ -160,7 +159,7 @@ function toValuedText(text, color, align, fontSize, shadow, outline, fontName)
 	end
 	return valuedText
 end
-
+]]
 function compareStrWithConvert(aName1, aName2)
 	local name1=toWString(aName1)
 	local name2=toWString(aName2)
@@ -241,30 +240,24 @@ end
 -- Widget funtions
 --------------------------------------------------------------------------------
 
-Global("WIDGET_ALIGN_LOW", 0)
-Global("WIDGET_ALIGN_HIGH", 1)
-Global("WIDGET_ALIGN_CENTER", 2)
-Global("WIDGET_ALIGN_BOTH", 3)
-Global("WIDGET_ALIGN_LOW_ABS", 4)
-
 function destroy(widget)
-	if widget and widget.DestroyWidget then widget:DestroyWidget() end
+	if widget then widget:DestroyWidget() end
 end
 
 function isVisible(widget)
-	if widget and widget.IsVisible then return widget:IsVisible() end
+	if widget then return widget:IsVisible() end
 	return nil
 end
 
 function getChild(widget, name, g)
 	if g==nil then g=false end
-	if not widget or not widget.GetChildUnchecked or not name then return nil end
+	if not widget or not name then return nil end
 	return widget:GetChildUnchecked(name, g)
 end
 
 function move(widget, posX, posY)
 	if not widget then return end
-	local BarPlace=widget.GetPlacementPlain and widget:GetPlacementPlain()
+	local BarPlace = widget:GetPlacementPlain()
 	if not BarPlace then return nil end
 	if posX then
 		BarPlace.posX = posX
@@ -274,36 +267,36 @@ function move(widget, posX, posY)
 		BarPlace.posY = posY
 		BarPlace.highPosY = posY
 	end
-	if widget.SetPlacementPlain then widget:SetPlacementPlain(BarPlace) end
+	widget:SetPlacementPlain(BarPlace)
 end
 
 function setFade(widget, fade)
-	if widget and fade and widget.SetFade then
+	if widget and fade then
 		widget:SetFade(fade)
 	end
 end
 
 function resize(widget, width, height)
 	if not widget then return end
-	local BarPlace=widget.GetPlacementPlain and widget:GetPlacementPlain()
+	local BarPlace = widget:GetPlacementPlain()
 	if not BarPlace then return nil end
 	if width then BarPlace.sizeX = width end
 	if height then BarPlace.sizeY = height end
-	if widget.SetPlacementPlain then widget:SetPlacementPlain(BarPlace) end
+	widget:SetPlacementPlain(BarPlace)
 end
 
 function align(widget, alignX, alignY)
 	if not widget then return end
-	local BarPlace=widget.GetPlacementPlain and widget:GetPlacementPlain()
+	local BarPlace = widget:GetPlacementPlain()
 	if not BarPlace then return nil end
 	if alignX then BarPlace.alignX = alignX end
 	if alignY then BarPlace.alignY = alignY end
-	if widget.SetPlacementPlain then widget:SetPlacementPlain(BarPlace) end
+	widget:SetPlacementPlain(BarPlace)
 end
 
 function updatePlacementPlain(widget, alignX, alignY, posX, posY, width, height)
 	if not widget then return end
-	local BarPlace=widget.GetPlacementPlain and widget:GetPlacementPlain()
+	local BarPlace = widget:GetPlacementPlain()
 	if not BarPlace then return nil end
 	if alignX then BarPlace.alignX = alignX end
 	if alignY then BarPlace.alignY = alignY end
@@ -322,7 +315,7 @@ end
 
 function priority(widget, priority)
 	if not widget or not priority then return nil end
-	if widget.SetPriority then widget:SetPriority(priority) end
+	widget:SetPriority(priority)
 end
 
 function show(widget)
@@ -339,11 +332,11 @@ end
 
 function setName(widget, name)
 	if not widget or not name then return nil end
-	if widget.SetName then widget:SetName(name) end
+	widget:SetName(name)
 end
 
 function getName(widget)
-	return widget and widget.GetName and widget:GetName() or nil
+	return widget and widget:GetName() or nil
 end
 
 function getText(widget)
@@ -354,14 +347,51 @@ function getTextString(widget)
 	return widget and widget.GetText and toStringUtils(widget:GetText()) or nil
 end
 
+local tagFontName = toWString("fontname")
+local tagAlignX = toWString("alignx")
+local tagFontsize = toWString("fontsize")
+local tagShadow = toWString("shadow")
+local tagOutline = toWString("outline")
+local tagColor = toWString("color")
+
+function setTextViewText(widget, tagTextValue, text, color, align, fontSize, shadow, outline, fontName)
+	local attributes = {}
+	if fontName then
+		attributes[ tagFontName ] = toStringUtils(fontName)
+	end	
+	if align then
+		attributes[ tagAlignX ] = align
+	end	
+	if fontSize then
+		attributes[ tagFontsize ] = tostring(fontSize)
+	end	
+	if shadow then
+		attributes[ tagShadow ] = tostring(shadow)
+	end	
+	if outline then
+		attributes[ tagOutline ] = tostring(outline)
+	end	
+	if table.nkeys(attributes) > 0 then
+		widget:SetTextAttributes(true, tagTextValue, attributes)
+	end
+			
+	if color then
+		widget:SetClassVal("color", color)
+	end
+	if text then
+		widget:SetVal(tagTextValue, toWString(text))
+	end
+end
+
 function setText(widget, text, color, align, fontSize, shadow, outline, fontName)
 	if not widget then return nil end
 	text=toWString(text or "")
 	--textview
 	if widget.SetValuedText then 
-		widget:SetValuedText(toValuedText(text, color or "ColorWhite", align, fontSize, shadow, outline, fontName)) 
+		widget:SetFormat(formatText(text, align, fontSize, shadow, outline, fontName))
+		widget:SetClassVal( "color", color or "ColorWhite" )
 	--textedit
-	elseif widget.SetText then		
+	elseif widget.SetText then	
 		widget:SetText(text)
 	--buttons
 	elseif widget.SetVal then
@@ -382,10 +412,25 @@ function setBackgroundColor(widget, color)
 end
 
 local templateWidget=nil
+local addonRelatedWidgetGroups = {}
+
 
 function getDesc(name)
-	local widget=templateWidget and name and templateWidget.GetChildUnchecked and templateWidget:GetChildUnchecked(name, false)
-	return widget and widget.GetWidgetDesc and widget:GetWidgetDesc() or nil
+	if not templateWidget then
+		return nil
+	end
+	local valueType = type(templateWidget)
+	if valueType == "string" then
+		local wdgGroup = addonRelatedWidgetGroups[templateWidget]
+		if not wdgGroup then
+			wdgGroup = common.GetAddonRelatedWidgetGroup(templateWidget)
+			addonRelatedWidgetGroups[templateWidget] = wdgGroup
+		end
+		return wdgGroup:GetWidget(name)
+	else
+		local widget = templateWidget:GetChildUnchecked(name, false)
+		return widget and widget:GetWidgetDesc() or nil
+	end
 end
 
 function getParent(widget, num)
@@ -396,6 +441,7 @@ function getParent(widget, num)
 	return getParent(parent, num-1)
 end
 
+
 function createWidget(parent, widgetName, templateName, alignX, alignY, width, height, posX, posY)
 	local widget = nil
 	local desc = getDesc(templateName)
@@ -405,7 +451,7 @@ function createWidget(parent, widgetName, templateName, alignX, alignY, width, h
 	end
 	
 	widget = parent:CreateChildByDesc(desc)
-
+	
 	if not widget or not widget:IsValid() then
 		LogInfo("Fail create widget type of ", templateName)
 		return
@@ -420,7 +466,7 @@ function setTemplateWidget(widget)
 end
 
 function swap(widget)
-	if widget and widget.IsVisible and not widget:IsVisible() then
+	if widget and not widget:IsVisible() then
 		show(widget)
 	else
 		hide(widget)
@@ -464,10 +510,7 @@ end
 -- Timers functions
 --------------------------------------------------------------------------------
 
-
-
-local template=getChild(mainForm, "Template")
-
+local timersInited = false
 local timers={}
 local m_loopEffects={}
 
@@ -490,7 +533,7 @@ end
 
 function startTimer(name, callback, speed, one)
 	if name and timers[name] then destroy(timers[name].widget) end
-	setTemplateWidget(template)
+	setTemplateWidget("common")
 	local timerWidget=createWidget(mainForm, name, "Timer")
 	if not timerWidget or not name or not callback then return nil end
 	local newTimer = {}
@@ -499,7 +542,10 @@ function startTimer(name, callback, speed, one)
 	newTimer.one=one
 	newTimer.speed=tonumber(speed) or 1
 
-	common.RegisterEventHandler(timerTick, "EVENT_EFFECT_FINISHED")
+	if not timersInited then
+		common.RegisterEventHandler(timerTick, "EVENT_EFFECT_FINISHED")
+		timersInited = true
+	end
     timerWidget:PlayFadeEffect(1.0, 1.0, newTimer.speed*1000, EA_MONOTONOUS_INCREASE, true)
 	
 	timers[name] = newTimer
@@ -507,7 +553,10 @@ function startTimer(name, callback, speed, one)
 end
 
 function stopTimer(name)
-    common.UnRegisterEventHandler(timerTick, "EVENT_EFFECT_FINISHED")
+	if name and timers[name] then
+		timers[name].widget:FinishFadeEffect(false, false)
+	end
+    --common.UnRegisterEventHandler(timerTick, "EVENT_EFFECT_FINISHED")
 end
 
 function setTimeout(name, speed)
@@ -801,10 +850,8 @@ local cachedAvatarGetPos = avatar.GetPos
 local cachedAvatarGetDir = avatar.GetDir
 
 function getDistanceToTarget(targetId)
-	local objPos = cachedObjGetPos(targetId)
-	if not objPos then return nil end
-	local avPos = cachedAvatarGetPos()
-	local res = ((objPos.posX-avPos.posX)^2+(objPos.posY-avPos.posY)^2+(objPos.posZ-avPos.posZ)^2)^0.5
+	local res = object.GetDistance(targetId)
+	if not res then return nil end
 	res = math.ceil(res)
 
 	return res

@@ -4,7 +4,6 @@
 	<Priority>4551</Priority>
 	<Children>
 		<Item href="TopTargeterPanel/TopPanel.xdb#xpointer(/WidgetButton)"/>
-		<Item href="Bar/Bar.xdb#xpointer(/WidgetButton)"/>
 	</Children>
 	<BackLayer href="" />
 	<FrontLayer href="" />

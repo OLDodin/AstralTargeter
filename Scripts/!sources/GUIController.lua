@@ -1,5 +1,3 @@
-local m_template = getChild(mainForm, "Template")
-
 
 local m_targetSubSystemLoaded = false
 
@@ -27,7 +25,7 @@ function GetIndexForWidget(anWidget)
 end
 
 local function GenerateWidgetForTable(aTable, aContainer, anIndex)
-	setTemplateWidget(m_template)
+	setTemplateWidget("common")
 	local panel=createWidget(aContainer, nil, "Panel", WIDGET_ALIGN_BOTH, WIDGET_ALIGN_LOW, nil, 30, nil, nil, true)
 	setBackgroundColor(panel, {r=1, g=1, b=1, a=0.5})
 	setText(createWidget(panel, "Id", "TextView", WIDGET_ALIGN_LOW, WIDGET_ALIGN_CENTER, 30, 20, 10), anIndex)

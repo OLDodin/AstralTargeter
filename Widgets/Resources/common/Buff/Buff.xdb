@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<WidgetPanel>
+	<Priority>1</Priority>
+	<Name>BuffTemplate</Name>
+	<Children>
+		<Item href="DotHighlight.xdb"/>
+		<Item href="DotIcon.xdb"/>
+		<Item href="DotStackText.xdb"/>
+		<Item href="DotText.xdb"/>
+	</Children>
+	<Visible>false</Visible>
+	<TransparentInput>true</TransparentInput>
+</WidgetPanel>

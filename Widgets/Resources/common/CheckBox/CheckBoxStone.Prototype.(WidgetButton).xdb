@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<WidgetButton>
+	<Header>
+		<isPrototype>true</isPrototype>
+	</Header>
+	<Priority>256</Priority>
+	<IgnoreDblClick>true</IgnoreDblClick>
+	<Variants>
+		<Item>			
+			<LayerHighlight href="checkbox_light.(WidgetLayerTiledTexture).xdb" />
+			<StateNormal>
+				<LayerMain href="checkbox_active.(WidgetLayerTiledTexture).xdb" />
+				<FormatFileRef href="ButtonExecute.txt" />
+			</StateNormal>
+			<StatePushed>
+				<LayerMain href="checkbox.(WidgetLayerTiledTexture).xdb" />
+			</StatePushed>
+			<ReactionOnUp>true</ReactionOnUp>
+			<Reaction>CheckBoxChangedOn</Reaction>
+		</Item>
+		<Item>
+			<LayerHighlight href="checkbox_light.(WidgetLayerTiledTexture).xdb" />
+			<StateNormal>
+				<LayerMain href="checkbox.(WidgetLayerTiledTexture).xdb" />
+				<FormatFileRef href="ButtonExecute.txt" />
+			</StateNormal>
+			<ReactionOnUp>true</ReactionOnUp>
+			<Reaction>CheckBoxChangedOff</Reaction>
+		</Item>
+	</Variants>
+</WidgetButton>

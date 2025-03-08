@@ -7,7 +7,6 @@ Global("g_classPriority", {
 	["UNIT"]		= 1
 })
 
-local m_template = getChild(mainForm, "Template")
 
 
 local m_relationColors={
@@ -270,7 +269,6 @@ function ResetPlayerPanelPosition(aPlayerBar, aX, aY, aFormSettings)
 end
 
 function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
-	setTemplateWidget(aParentPanel)
 	local barColor = { r = 0.8; g = 0.8; b = 0; a = 1.0 }
 	local panelWidth = tonumber(aFormSettings.raidWidthText)
 	local panelHeight = tonumber(aFormSettings.raidHeightText)
@@ -281,7 +279,7 @@ function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
 	local posY = mod2*panelHeight+30
 
 	local playerBar = {}
-
+	setTemplateWidget("bar")
 	playerBar.wdg = createWidget(aParentPanel, nil, "PlayerBar", nil, nil, panelWidth, panelHeight, posX, posY)
 	playerBar.barWdg = getChild(playerBar.wdg, "HealthBar")
 	playerBar.barBackgroundWdg = getChild(playerBar.wdg, "HealthBarBackground")
@@ -360,7 +358,7 @@ function CreatePlayerPanel(aParentPanel, aX, aY, aRaidMode, aFormSettings)
 	
 	playerBar.buffSlotsNeg = {}
 	playerBar.usedBuffSlotNegCnt = 0
-	setTemplateWidget(m_template)
+	setTemplateWidget("common")
 	
 	for i = 1, buffSlotCnt do
 		--CreateBuffSlot(playerBar.buffPanelWdg, buffSize, playerBar.buffSlots, i, WIDGET_ALIGN_LOW)
@@ -448,14 +446,13 @@ function TargetLockBtn(aTopPanelForm)
 end
 
 function CreateTargeterPanel()
-	setTemplateWidget(m_template)
 	local targeterPanel = getChild(mainForm, "AstralTargeter")
 	move(targeterPanel, 500, 380)
 	local wtTopPanel = getChild(targeterPanel, "TopTargeterPanel")
 	DnD.Init(targeterPanel, wtTopPanel, true, false)
 	resize(wtTopPanel, 200, nil)
 	
-	setTemplateWidget(m_template)
+	setTemplateWidget("common")
 	local modePanel = createWidget(targeterPanel, "targeterDropDown", "DropDownPanel", WIDGET_ALIGN_LOW, WIDGET_ALIGN_LOW, 170, 20, 20, 240)
 	m_targetModeName = getChild(getChild(modePanel, "DropDownHeaderPanel"), "ModeNameTextView")
 	m_lockBtn = getChild(wtTopPanel, "ButtonLocker")
