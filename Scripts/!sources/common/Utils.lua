@@ -3,6 +3,7 @@ local cachedFromWString = userMods.FromWString
 local cachedIsExist = object.IsExist
 local cachedIsUnit = object.IsUnit
 local cachedCreateValuedText = common.CreateValuedText
+local cachedTableSClone = table.sclone
 
 local cachedTimeAbbr = {}
 
@@ -688,7 +689,7 @@ function getItemIdFromName(aName)
 	
 	if not cacheItemId then
 		cacheItemId = GetAVLWStrTree()
-		local inventory = avatar.GetInventoryItemIds()
+		local inventory = containerLib.GetItems(ITEM_CONT_INVENTORY)
 		if not inventory then return nil end
 
 		for i, itemId in pairs(inventory) do
@@ -917,7 +918,7 @@ function updateCachedTimestamp()
 end
 
 function copyTable(t)
-	return table.sclone(t)
+	return cachedTableSClone(t)
 end
 
 function deepCopyTable(t)

@@ -332,21 +332,21 @@ local function GetAstroList()
 	local list3 = astral.GetUnits()
 	
 	if list1 then
-		for _, objID in pairs(list1) do
+		for _, objID in ipairs(list1) do
 			if isExist(objID) then
 				table.insert(resultList, objID)
 			end
 		end
 	end
 	if list2 then
-		for _, objID in pairs(list2) do
+		for _, objID in ipairs(list2) do
 			if isExist(objID) then
 				table.insert(resultList, objID)
 			end
 		end
 	end
 	if list3 then
-		for _, objID in pairs(list3) do
+		for _, objID in ipairs(list3) do
 			if isExist(objID) then
 				table.insert(resultList, objID)
 			end
@@ -703,11 +703,11 @@ local function UnitDespawned(anObjID)
 end
 
 local function UnitChanged(aParams)
-	for i = 0, GetTableSize(aParams.spawned)-1 do
-		UnitSpawned(aParams.spawned[i])
+	for _, spawnedID in ipairs(aParams.spawned) do
+		UnitSpawned(spawnedID)
 	end
-	for i = 0, GetTableSize(aParams.despawned)-1 do
-		UnitDespawned(aParams.despawned[i])
+	for _, despawnedID in ipairs(aParams.despawned) do
+		UnitDespawned(despawnedID)
 	end
 end
 
