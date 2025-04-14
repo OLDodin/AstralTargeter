@@ -168,7 +168,7 @@ function LogTable( t, tabstep )
 		LogInfo( "nil (no table)" )
 		return
 	end
-	assert( type( t ) == "table", "Invalid data passed" )
+	assert( type( t ) == "table", "Invalid data passed " )
 	local TabString = string.rep( "    ", tabstep )
 	local isEmpty = true
 	for i, v in pairs( t ) do
@@ -176,7 +176,7 @@ function LogTable( t, tabstep )
 			LogInfo( TabString, i, ":" )
 			LogTable( v, tabstep + 1 )
 		else
-			LogInfo( TabString, i, " = ", v )
+			LogInfo( TabString, i, " = ", tostring(v) )
 		end
 		isEmpty = false
 	end
